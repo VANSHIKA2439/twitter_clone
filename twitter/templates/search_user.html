@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="col-md-6 offset-md-3 my-5">
+<form method="POST">
+    {% csrf_token %}
+      <input type="input" class="form-control" name="search" placeholder="Search User" ><br><br>
+      <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+<h4> You search for: {{search}}</h4>
+
+<h4>Results:</h4>
+{% if searched %}
+
+{% for result in searched %}
+<div class="card mb-3 my-5 text-center" style="max-width: 540px;border: 5px solid black;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        {% if result.profile.profile_image %}
+        <img src="{{ result.profile.profile_image.url }}" class="img-fluid rounded-start" alt="Profile Image">
+        {% else %}
+        <img src="{% static 'images/profile.png'%}" class="img-fluid rounded-start" alt="Profile Image">
+        {% endif %}
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ result.profile.user.username }}</h5>
+          <p class="card-text">Link: <a href="{% url 'profile' result.profile.user.id %}"> @{{ result.profile.user.username|lower }}</a></p>
+          <p class="card-text"><small class="text-body-secondary">Last updated {{ result.profile.date_modified}}</small></p>
+        </div>
+        </div>
+    </div>
+</div>
+{%endfor%}
+{% endif %}
+{% endblock %}
